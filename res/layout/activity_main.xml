@@ -8,36 +8,4 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <ListView
-        android:id="@+id/LVItems"
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        android:layout_alignParentTop="true" >
-
-    </ListView>
-
-    <EditText
-        android:id="@+id/etNewItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/LVItems"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_toLeftOf="@+id/btnAddItem"
-        android:ems="10"
-        android:hint="@string/TextField1_Hint" >
-
-        <requestFocus />
-    </EditText>
-
-    <Button
-        android:id="@+id/btnAddItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/etNewItem"
-        android:layout_alignBottom="@+id/etNewItem"
-        android:layout_alignRight="@+id/LVItems"
-        android:text="Add To List" 
-        android:onClick="addToList"/>
-
 </RelativeLayout>

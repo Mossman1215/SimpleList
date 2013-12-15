@@ -3,49 +3,42 @@ package com.Mossman.experiment.simplelist;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
-
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.Menu;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 public class MainActivity extends Activity {
 	
 	ArrayList<String> items;
-	ArrayAdapter<String> itemsAdapter;
-	ListView lvItem;
+	LinearLayout lineLay;
+	ScrollView scrollView;
+	Button button;
+	EditText textBox;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		lvItem = (ListView) findViewById(R.id.LVItems);
-		readItems();
-		itemsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,items);
-		lvItem.setAdapter(itemsAdapter);
-		items.add("first item");
-		items.add("second item");
-		setupListViewListener();
-	}
-
-	private void setupListViewListener() {
-		lvItem.setOnItemLongClickListener(new OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent,View view,int position,long rowId){
-				items.remove(position);
-				itemsAdapter.notifyDataSetChanged();
-				saveItems();//write to file
-				return true;
-			}
-		});
+		scrollView = new ScrollView(this);
+		lineLay = new LinearLayout(this);
+		scrollView.addView(lineLay);
+		button = new Button(this);
+		button.setText("Add to list");
+		button.setOnClickListener(new ButtonClickListener(this));
+		lineLay.addView(button);
+		textBox = new EditText(this);
+		textBox.setSingleLine(true);
+		textBox.setMinimumWidth(getTextWidth()-button.getWidth());
+		lineLay.addView(textBox);
+		this.setContentView(scrollView);
 	}
 
 	@Override
@@ -54,15 +47,21 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	public void addToList(View v){
-		EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
-		itemsAdapter.add(etNewItem.getText().toString());
-		etNewItem.setText("");
-		saveItems();//write to file
+
+	@SuppressLint("NewApi")
+	private int getTextWidth() {
+		Display display = getWindowManager().getDefaultDisplay();
+		if(android.os.Build.VERSION.SDK_INT<13){
+			@SuppressWarnings("deprecation")
+			int width = display.getWidth();
+			return width;
+		}else{
+			Point point = new Point();
+			display.getSize(point);
+			return point.x;
+		}
 	}
 	
-
 	private void readItems(){
 		File filesDir = getFilesDir();
 		File todoFile = new File(filesDir,"todo.txt");
