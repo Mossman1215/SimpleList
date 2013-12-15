@@ -62,6 +62,7 @@ public class MainActivity extends Activity {
 		saveItems();//write to file
 	}
 	
+
 	private void readItems(){
 		File filesDir = getFilesDir();
 		File todoFile = new File(filesDir,"todo.txt");
