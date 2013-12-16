@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.Menu;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -38,6 +37,8 @@ public class MainActivity extends Activity {
 		textBox.setSingleLine(true);
 		textBox.setMinimumWidth(getTextWidth()-button.getWidth());
 		lineLay.addView(textBox);
+		//TODO: load from file and add to linearlayout
+		items = new ArrayList<String>();
 		this.setContentView(scrollView);
 	}
 
@@ -82,4 +83,5 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 	}
+
 }
