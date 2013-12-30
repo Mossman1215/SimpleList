@@ -3,7 +3,9 @@ package com.Mossman.experiment.simplelist;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import org.apache.commons.io.FileUtils;
+
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,6 +13,7 @@ import android.graphics.Point;
 import android.view.Display;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -18,28 +21,48 @@ import android.widget.ScrollView;
 public class MainActivity extends Activity {
 	
 	ArrayList<String> items;
-	LinearLayout lineLay;
+	LinearLayout elementsView;
 	ScrollView scrollView;
+	LinearLayout textBoxView;
+	LinearLayout mainContainer;
 	Button button;
 	EditText textBox;
+	CheckBox toAdd;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mainContainer = new LinearLayout(this);
+		mainContainer.setOrientation(LinearLayout.VERTICAL);
 		scrollView = new ScrollView(this);
-		lineLay = new LinearLayout(this);
-		scrollView.addView(lineLay);
+		elementsView = new LinearLayout(this);
+		elementsView.setOrientation(LinearLayout.VERTICAL);
+		scrollView.addView(elementsView);
+		textBoxView = new LinearLayout(this);
+		textBoxView.setOrientation(LinearLayout.HORIZONTAL);
 		button = new Button(this);
 		button.setText("Add to list");
 		button.setOnClickListener(new ButtonClickListener(this));
-		lineLay.addView(button);
+		textBoxView.addView(button);
 		textBox = new EditText(this);
 		textBox.setSingleLine(true);
 		textBox.setMinimumWidth(getTextWidth()-button.getWidth());
-		lineLay.addView(textBox);
+		textBoxView.addView(textBox);
+		//addeverything to main container
+		mainContainer.addView(textBoxView);
+		mainContainer.addView(scrollView);
 		//TODO: load from file and add to linearlayout
 		items = new ArrayList<String>();
-		this.setContentView(scrollView);
+		
+		String textBoxString = textBox.getText().toString()+" Hello";
+		items.add(textBoxString);
+		//add an element to linelay with the same string
+		toAdd = new CheckBox(this);
+		toAdd.setText("hello");
+		toAdd.setId(2);
+		elementsView.addView(toAdd);
+		
+		this.setContentView(mainContainer);
 	}
 
 	@Override

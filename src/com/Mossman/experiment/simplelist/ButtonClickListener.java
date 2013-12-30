@@ -16,12 +16,16 @@ public class ButtonClickListener implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		//add the textbox string to the list of items (string)
-		String textBoxString = mainActivity.textBox.getText().toString();
-		mainActivity.items.add(textBoxString);
-		//add an element to linelay with the same string
-		CheckBox toAdd = new CheckBox(mainActivity);
-		toAdd.setText(textBoxString);
-		mainActivity.lineLay.addView(toAdd);
+		mainActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				String textBoxString = mainActivity.textBox.getText().toString();
+				mainActivity.items.add(textBoxString);
+				//add an element to linelay with the same string
+				mainActivity.toAdd = new CheckBox(mainActivity);
+				mainActivity.toAdd.setText(textBoxString);
+				mainActivity.elementsView.addView(mainActivity.toAdd);
+			}
+		});
 		//TODO: save list
 	}
 }
