@@ -9,16 +9,21 @@ import org.apache.commons.io.FileUtils;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnLongClickListener{
 	
 	ArrayList<String> items;
 	LinearLayout elementsView;
@@ -60,6 +65,7 @@ public class MainActivity extends Activity {
 		toAdd = new CheckBox(this);
 		toAdd.setText("hello");
 		toAdd.setId(2);
+		toAdd.setOnLongClickListener(this);
 		elementsView.addView(toAdd);
 		
 		this.setContentView(mainContainer);
@@ -105,6 +111,23 @@ public class MainActivity extends Activity {
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		if(v instanceof CheckBox){
+			int id = v.getId();
+			//find the other references to v (the check box that was selected and set them to null or some other way of removing them
+			CheckBox toRemove = ((CheckBox)v);
+			//call remove() on the list of checkboxes with toremove as an argument
+			//remove from elementsView
+			//elementsView.removeView(v); uncomment when this is run on uithread
+			toRemove.setTextColor(Color.LTGRAY);		
+			System.out.println("remove this item");
+		}else{
+			throw new RuntimeException("Long press on an view that was not a checkbox" + v.toString());
+		}
+		return false;
 	}
 
 }
