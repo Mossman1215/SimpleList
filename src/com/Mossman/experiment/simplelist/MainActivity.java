@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements OnLongClickListener{
 			CheckBox toRemove = ((CheckBox)v);
 			//call remove() on the list of checkboxes with toremove as an argument
 			//remove from elementsView
-			//elementsView.removeView(v); uncomment when this is run on uithread
+			runOnUiThread(new ViewRemover(v, elementsView));
 			toRemove.setTextColor(Color.LTGRAY);		
 			System.out.println("remove this item");
 		}else{
