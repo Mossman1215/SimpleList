@@ -56,18 +56,13 @@ public class MainActivity extends Activity implements OnLongClickListener{
 		//addeverything to main container
 		mainContainer.addView(textBoxView);
 		mainContainer.addView(scrollView);
-		//TODO: load from file and add to linearlayout
-		items = new ArrayList<String>();
+		
+		items = new ArrayList<String>();//just in case read items leads to a null list
+		readItems();
 		
 		String textBoxString = textBox.getText().toString()+" Hello";
 		items.add(textBoxString);
-		//add an element to linelay with the same string
-		toAdd = new CheckBox(this);
-		toAdd.setText("hello");
-		toAdd.setId(2);
-		toAdd.setOnLongClickListener(this);
-		elementsView.addView(toAdd);
-		
+						
 		this.setContentView(mainContainer);
 	}
 
@@ -97,13 +92,14 @@ public class MainActivity extends Activity implements OnLongClickListener{
 		File todoFile = new File(filesDir,"todo.txt");
 		try{
 			items = new ArrayList<String>(FileUtils.readLines(todoFile));
+			this.runOnUiThread(new LoadExistingList(this,items));
 		}catch(IOException e){
 			items = new ArrayList<String>();
 			e.printStackTrace();
 		}
 	}
 	
-	private void saveItems(){
+	public void saveItems(){
 		File filesDir = getFilesDir();
 		File todoFile = new File(filesDir,"todo.txt");
 		try{
@@ -111,6 +107,7 @@ public class MainActivity extends Activity implements OnLongClickListener{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
 	}
 
 	@Override
@@ -123,7 +120,6 @@ public class MainActivity extends Activity implements OnLongClickListener{
 			//remove from elementsView
 			runOnUiThread(new ViewRemover(v, elementsView));
 			toRemove.setTextColor(Color.LTGRAY);		
-			System.out.println("remove this item");
 			return true;
 		}else{
 			throw new RuntimeException("Long press on an view that was not a checkbox" + v.toString());
