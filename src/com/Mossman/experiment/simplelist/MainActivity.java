@@ -124,10 +124,10 @@ public class MainActivity extends Activity implements OnLongClickListener{
 			runOnUiThread(new ViewRemover(v, elementsView));
 			toRemove.setTextColor(Color.LTGRAY);		
 			System.out.println("remove this item");
+			return true;
 		}else{
 			throw new RuntimeException("Long press on an view that was not a checkbox" + v.toString());
 		}
-		return false;
 	}
 
 }
