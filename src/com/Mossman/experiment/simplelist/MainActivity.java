@@ -59,7 +59,16 @@ public class MainActivity extends Activity implements OnLongClickListener{
 		
 		items = new ArrayList<String>();//just in case read items leads to a null list
 		readItems();
+		//if items has stuff in it populate the list with existing content
 		
+		if(!items.isEmpty()){
+			for(String s: items){
+				CheckBox box = new CheckBox(this);
+				box.setText(s);
+				box.setOnLongClickListener(this);
+				elementsView.addView(box);
+			}
+		}
 		String textBoxString = textBox.getText().toString()+" Hello";
 		items.add(textBoxString);
 						
@@ -92,7 +101,6 @@ public class MainActivity extends Activity implements OnLongClickListener{
 		File todoFile = new File(filesDir,"todo.txt");
 		try{
 			items = new ArrayList<String>(FileUtils.readLines(todoFile));
-			this.runOnUiThread(new LoadExistingList(this,items));
 		}catch(IOException e){
 			items = new ArrayList<String>();
 			e.printStackTrace();
