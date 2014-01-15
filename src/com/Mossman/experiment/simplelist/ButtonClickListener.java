@@ -23,9 +23,10 @@ public class ButtonClickListener implements OnClickListener{
 				//add an element to linelay with the same string
 				mainActivity.toAdd = new CheckBox(mainActivity);
 				mainActivity.toAdd.setText(textBoxString);
-				mainActivity.items.add(textBoxString);
 				mainActivity.toAdd.setOnLongClickListener(mainActivity);
 				mainActivity.elementsView.addView(mainActivity.toAdd);
+				mainActivity.checkboxes.add(mainActivity.toAdd);
+				mainActivity.textBox.setText("");
 			}
 		});
 		mainActivity.saveItems();

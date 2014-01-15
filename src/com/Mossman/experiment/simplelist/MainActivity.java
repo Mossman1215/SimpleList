@@ -3,6 +3,7 @@ package com.Mossman.experiment.simplelist;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
@@ -33,7 +34,7 @@ public class MainActivity extends Activity implements OnLongClickListener{
 	Button button;
 	EditText textBox;
 	CheckBox toAdd;
-	
+	List<CheckBox> checkboxes;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,20 +59,27 @@ public class MainActivity extends Activity implements OnLongClickListener{
 		mainContainer.addView(scrollView);
 		
 		items = new ArrayList<String>();//just in case read items leads to a null list
+		checkboxes = new ArrayList<CheckBox>();
 		readItems();
 		//if items has stuff in it populate the list with existing content
 		
 		if(!items.isEmpty()){
 			for(String s: items){
 				CheckBox box = new CheckBox(this);
-				box.setText(s);
+				box.setOnClickListener(new CheckBoxListener(this));
+				checkboxes.add(box);
+				String[] values = s.split(" ");
+				box.setText(values[0]);
+				s = values[0];
+				if(values[1].equals("true")){
+					box.setChecked(true);
+				}else{
+					box.setChecked(false);
+				}
 				box.setOnLongClickListener(this);
 				elementsView.addView(box);
 			}
-		}
-		String textBoxString = textBox.getText().toString()+" Hello";
-		items.add(textBoxString);
-						
+		}						
 		this.setContentView(mainContainer);
 	}
 
@@ -98,7 +106,7 @@ public class MainActivity extends Activity implements OnLongClickListener{
 	
 	private void readItems(){
 		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir,"todo.txt");
+		File todoFile = new File(filesDir,"SimpleList2.txt");
 		try{
 			items = new ArrayList<String>(FileUtils.readLines(todoFile));
 		}catch(IOException e){
@@ -109,13 +117,23 @@ public class MainActivity extends Activity implements OnLongClickListener{
 	
 	public void saveItems(){
 		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir,"todo.txt");
+		File todoFile = new File(filesDir,"SimpleList2.txt");
 		try{
+			//TODO: write out checkbox status
+			//iterate over list of checkboxes and list of string names
+			int size = items.size();
+			for(int i =0;i<size;i++){
+				String item = items.get(i);
+				if(checkboxes.get(i).isChecked()&&(!item.contains("true")||!item.contains("false"))){
+					items.set(i, items.get(i).concat(" true"));
+				}else{
+					items.set(i, items.get(i).concat(" false"));
+				}
+			}
 			FileUtils.writeLines(todoFile, items);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
@@ -124,14 +142,14 @@ public class MainActivity extends Activity implements OnLongClickListener{
 			int id = v.getId();
 			//find the other references to v (the check box that was selected and set them to null or some other way of removing them
 			CheckBox toRemove = ((CheckBox)v);
-			//call remove() on the list of checkboxes with toremove as an argument
+			items.remove(toRemove.getText());
 			//remove from elementsView
-			runOnUiThread(new ViewRemover(v, elementsView));
+			runOnUiThread(new ViewRemover(v, elementsView,checkboxes));
 			toRemove.setTextColor(Color.LTGRAY);		
+			saveItems();
 			return true;
 		}else{
 			throw new RuntimeException("Long press on an view that was not a checkbox" + v.toString());
 		}
 	}
-
 }
