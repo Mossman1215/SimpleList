@@ -24,8 +24,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-public class MainActivity extends Activity implements OnLongClickListener{
-	
+public class MainActivity extends Activity implements OnLongClickListener {
+
 	ArrayList<String> items;
 	LinearLayout elementsView;
 	ScrollView scrollView;
@@ -35,6 +35,7 @@ public class MainActivity extends Activity implements OnLongClickListener{
 	EditText textBox;
 	CheckBox toAdd;
 	List<CheckBox> checkboxes;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,34 +53,37 @@ public class MainActivity extends Activity implements OnLongClickListener{
 		textBoxView.addView(button);
 		textBox = new EditText(this);
 		textBox.setSingleLine(true);
-		textBox.setMinimumWidth(getTextWidth()-button.getWidth());
+		textBox.setMinimumWidth(getTextWidth() - button.getWidth());
 		textBoxView.addView(textBox);
-		//addeverything to main container
+		// addeverything to main container
 		mainContainer.addView(textBoxView);
 		mainContainer.addView(scrollView);
-		
-		items = new ArrayList<String>();//just in case read items leads to a null list
+
+		items = new ArrayList<String>();// just in case read items leads to a
+										// null list
 		checkboxes = new ArrayList<CheckBox>();
 		readItems();
-		//if items has stuff in it populate the list with existing content
-		
-		if(!items.isEmpty()){
-			for(String s: items){
+		// if items has stuff in it populate the list with existing content
+
+		if (!items.isEmpty()) {
+			int size = items.size();
+			for (int i =0;i<size;i++) {
 				CheckBox box = new CheckBox(this);
 				box.setOnClickListener(new CheckBoxListener(this));
 				checkboxes.add(box);
-				String[] values = s.split(" ");
+				String[] values = items.get(i).split(" ");
+				items.set(i, values[0]);
 				box.setText(values[0]);
-				s = values[0];
-				if(values[1].equals("true")){
+				//set items as values[0]
+				if (values[1].equals("true")) {
 					box.setChecked(true);
-				}else{
+				} else {
 					box.setChecked(false);
 				}
 				box.setOnLongClickListener(this);
 				elementsView.addView(box);
 			}
-		}						
+		}
 		this.setContentView(mainContainer);
 	}
 
@@ -93,63 +97,64 @@ public class MainActivity extends Activity implements OnLongClickListener{
 	@SuppressLint("NewApi")
 	private int getTextWidth() {
 		Display display = getWindowManager().getDefaultDisplay();
-		if(android.os.Build.VERSION.SDK_INT<13){
+		if (android.os.Build.VERSION.SDK_INT < 13) {
 			@SuppressWarnings("deprecation")
 			int width = display.getWidth();
 			return width;
-		}else{
+		} else {
 			Point point = new Point();
 			display.getSize(point);
 			return point.x;
 		}
 	}
-	
-	private void readItems(){
+
+	private void readItems() {
 		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir,"SimpleList2.txt");
-		try{
+		File todoFile = new File(filesDir, "SimpleList3.txt");
+		try {
 			items = new ArrayList<String>(FileUtils.readLines(todoFile));
-		}catch(IOException e){
+		} catch (IOException e) {
 			items = new ArrayList<String>();
 			e.printStackTrace();
 		}
 	}
-	
-	public void saveItems(){
+
+	public void saveItems() {
 		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir,"SimpleList2.txt");
-		try{
-			//TODO: write out checkbox status
-			//iterate over list of checkboxes and list of string names
+		File todoFile = new File(filesDir, "SimpleList3.txt");
+		try {
 			int size = items.size();
-			for(int i =0;i<size;i++){
+			for (int i = 0; i < size; i++) {
 				String item = items.get(i);
-				if(checkboxes.get(i).isChecked()&&(!item.contains("true")||!item.contains("false"))){
+				if (checkboxes.get(i).isChecked()) {
 					items.set(i, items.get(i).concat(" true"));
-				}else{
+				} else {
 					items.set(i, items.get(i).concat(" false"));
 				}
 			}
 			FileUtils.writeLines(todoFile, items);
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public boolean onLongClick(View v) {
-		if(v instanceof CheckBox){
+		if (v instanceof CheckBox) {
 			int id = v.getId();
-			//find the other references to v (the check box that was selected and set them to null or some other way of removing them
-			CheckBox toRemove = ((CheckBox)v);
+			// find the other references to v (the check box that was selected
+			// and set them to null or some other way of removing them
+			CheckBox toRemove = ((CheckBox) v);
 			items.remove(toRemove.getText());
-			//remove from elementsView
-			runOnUiThread(new ViewRemover(v, elementsView,checkboxes));
-			toRemove.setTextColor(Color.LTGRAY);		
+			// remove from elementsView
+			runOnUiThread(new ViewRemover(v, elementsView, checkboxes));
+			toRemove.setTextColor(Color.LTGRAY);
 			saveItems();
 			return true;
-		}else{
-			throw new RuntimeException("Long press on an view that was not a checkbox" + v.toString());
+		} else {
+			throw new RuntimeException(
+					"Long press on an view that was not a checkbox"
+							+ v.toString());
 		}
 	}
 }
