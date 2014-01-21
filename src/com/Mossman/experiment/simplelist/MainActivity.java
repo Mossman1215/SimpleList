@@ -64,7 +64,6 @@ public class MainActivity extends Activity implements OnLongClickListener {
 		checkboxes = new ArrayList<CheckBox>();
 		readItems();
 		// if items has stuff in it populate the list with existing content
-
 		if (!items.isEmpty()) {
 			int size = items.size();
 			for (int i =0;i<size;i++) {
@@ -123,6 +122,7 @@ public class MainActivity extends Activity implements OnLongClickListener {
 		File filesDir = getFilesDir();
 		File todoFile = new File(filesDir, "SimpleList3.txt");
 		try {
+			//add state of checkbox
 			int size = items.size();
 			for (int i = 0; i < size; i++) {
 				String item = items.get(i);
@@ -136,6 +136,12 @@ public class MainActivity extends Activity implements OnLongClickListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		//remove trailing boolean
+		int size = items.size();
+		for (int i = 0; i < size; i++) {
+			String[] values = items.get(i).split(" ");
+			items.set(i, values[0]);
+		}
 	}
 
 	@Override
@@ -147,8 +153,7 @@ public class MainActivity extends Activity implements OnLongClickListener {
 			CheckBox toRemove = ((CheckBox) v);
 			items.remove(toRemove.getText());
 			// remove from elementsView
-			runOnUiThread(new ViewRemover(v, elementsView, checkboxes));
-			toRemove.setTextColor(Color.LTGRAY);
+			runOnUiThread(new ViewRemover(v, elementsView, checkboxes,items));
 			saveItems();
 			return true;
 		} else {

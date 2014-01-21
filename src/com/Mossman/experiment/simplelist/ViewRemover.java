@@ -15,11 +15,12 @@ public class ViewRemover implements Runnable {
 	View toRemove;
 	LinearLayout list;
 	List<CheckBox> checkboxes;
-	
-	public ViewRemover(View toRemove,LinearLayout list,List<CheckBox> checkboxes){
+	List<String> items;
+	public ViewRemover(View toRemove,LinearLayout list,List<CheckBox> checkboxes,List<String>items){
 		this.toRemove=toRemove;
 		this.list = list;
 		this.checkboxes = checkboxes;
+		this.items = items;
 	}
 	@Override
 	public void run() {
