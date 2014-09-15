@@ -70,11 +70,13 @@ public class MainActivity extends Activity implements OnLongClickListener {
 				CheckBox box = new CheckBox(this);
 				box.setOnClickListener(new CheckBoxListener(this));
 				checkboxes.add(box);
-				String[] values = items.get(i).split(" ");
+				String[] values = items.get(i).split(",");
 				items.set(i, values[0]);
 				box.setText(values[0]);
 				//set items as values[0]
-				if (values[1].equals("true")) {
+				if(values.length<2){
+					box.setChecked(false);
+				}else if (values[1].equals("true")) {
 					box.setChecked(true);
 				} else {
 					box.setChecked(false);
@@ -109,7 +111,7 @@ public class MainActivity extends Activity implements OnLongClickListener {
 
 	private void readItems() {
 		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir, "SimpleList3.txt");
+		File todoFile = new File(filesDir, "SimpleList.dat");
 		try {
 			items = new ArrayList<String>(FileUtils.readLines(todoFile));
 		} catch (IOException e) {
@@ -120,16 +122,16 @@ public class MainActivity extends Activity implements OnLongClickListener {
 
 	public void saveItems() {
 		File filesDir = getFilesDir();
-		File todoFile = new File(filesDir, "SimpleList3.txt");
+		File todoFile = new File(filesDir, "SimpleList.dat");
 		try {
 			//add state of checkbox
 			int size = items.size();
 			for (int i = 0; i < size; i++) {
 				String item = items.get(i);
 				if (checkboxes.get(i).isChecked()) {
-					items.set(i, items.get(i).concat(" true"));
+					items.set(i, items.get(i).concat(",true"));
 				} else {
-					items.set(i, items.get(i).concat(" false"));
+					items.set(i, items.get(i).concat(",false"));
 				}
 			}
 			FileUtils.writeLines(todoFile, items);
@@ -139,7 +141,7 @@ public class MainActivity extends Activity implements OnLongClickListener {
 		//remove trailing boolean
 		int size = items.size();
 		for (int i = 0; i < size; i++) {
-			String[] values = items.get(i).split(" ");
+			String[] values = items.get(i).split(",");
 			items.set(i, values[0]);
 		}
 	}
